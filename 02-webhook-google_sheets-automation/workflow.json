@@ -1,0 +1,125 @@
+{
+  "name": "workflow2",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "8d2c2e48-c669-46a0-984c-1831006b8020",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -112,
+        -48
+      ],
+      "id": "4dc9deb1-7d88-4de4-aa60-f035ff6f083d",
+      "name": "Webhook",
+      "webhookId": "8d2c2e48-c669-46a0-984c-1831006b8020"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1YLDkdiBR5ke6QCmVfhoXNTffHmntBm2I2P5_QeD31qo",
+          "mode": "list",
+          "cachedResultName": "n8n_demo",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1YLDkdiBR5ke6QCmVfhoXNTffHmntBm2I2P5_QeD31qo/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 708795655,
+          "mode": "list",
+          "cachedResultName": "Sheet2",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1YLDkdiBR5ke6QCmVfhoXNTffHmntBm2I2P5_QeD31qo/edit#gid=708795655"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "name": "={{ $json.body.name }}",
+            "email": "={{ $json.body.email}}",
+            "city": "={{ $json.body.city}}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "city",
+              "displayName": "city",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        208,
+        -48
+      ],
+      "id": "1ca27937-824f-4b52-9477-fd4626c0edb1",
+      "name": "Append row in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "RmeZD9sysMgBxwXw",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "566aaa0b-55d8-4c58-9587-d6afce15a72c",
+  "meta": {
+    "instanceId": "97d5183f969068c33f595e1ff936f60e450877053c610ceca5ab548f16b5606f"
+  },
+  "nodeGroups": [],
+  "id": "qGPrlsrwTduYcNm7",
+  "tags": []
+}
