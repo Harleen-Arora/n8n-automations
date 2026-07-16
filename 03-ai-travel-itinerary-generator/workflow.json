@@ -1,0 +1,173 @@
+{
+  "name": "workflow3",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "travel-plan",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -368,
+        -16
+      ],
+      "id": "a5aed9c7-a90b-414f-81f6-01b3521cb2d4",
+      "name": "Webhook",
+      "webhookId": "fe96cda4-e563-4444-9212-bb41f62ba2ff"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "71e6e854-5802-42be-8c43-e5db376afbd8",
+              "name": "destination",
+              "value": "={{ $json.body.destination }}",
+              "type": "string"
+            },
+            {
+              "id": "833c9baa-11d5-4242-a5fe-0d4134d1e6e7",
+              "name": "days",
+              "value": "={{ $json.body.days }}",
+              "type": "number"
+            },
+            {
+              "id": "3e479d2f-de1f-4527-a41f-047e541c91b9",
+              "name": "budget",
+              "value": "={{ $json.body.budget }}",
+              "type": "number"
+            },
+            {
+              "id": "d1ead248-236f-4209-9d01-d3cc4cea86cb",
+              "name": "transport",
+              "value": "={{ $json.body.transport }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -160,
+        -16
+      ],
+      "id": "72734d9e-2115-432f-8817-f7d782478e99",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Create a detailed travel itinerary based on the following information:\n\nDestination: {{ $json.destination }}\nNumber of Days: {{ $json.days }}\nBudget: ₹{{ $json.budget }}\nPreferred Transport: {{ $json.transport }}\n\nGenerate a detailed travel itinerary that includes:\n\n1. Trip Overview\n2. Best Transportation Option\n3. Day-wise Itinerary\n4. Top Attractions and Activities\n5. Recommended Local Foods\n6. Budget Breakdown (Transport, Accommodation, Food, Activities, Miscellaneous)\n7. Travel Tips\n8. Best Time to Visit\n9. Packing Suggestions\n10. Summary\n\nRequirements:\n- Keep all recommendations within the given budget.\n- Ensure the itinerary matches the specified number of days.\n- Prioritize the preferred mode of transport whenever possible.\n- Use realistic attractions, restaurants, and accommodations.\n- Make the itinerary practical and easy to follow.\n\nIMPORTANT:\n- Return ONLY plain text.\n- Do NOT use Markdown.\n- Do NOT use HTML.\n- Do NOT use code blocks or backticks.\n- Format the output using simple headings, blank lines, numbered sections, and bullet points so it is easy to read when saved as a .txt file.\n- Begin with the title \"TRAVEL ITINERARY\".",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        48,
+        -16
+      ],
+      "id": "197c5657-9230-468d-999d-a3a07f12c5ae",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "llama-3.3-70b-versatile",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        48,
+        160
+      ],
+      "id": "f5f0afa6-2331-4093-9373-47cf394dff9a",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "nJXPRE2VmMnEYcW7",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "=output",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        -16
+      ],
+      "id": "9141a5b2-745c-40cb-92b2-9112f0f3fbc7",
+      "name": "Convert to File"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "f358baff-a71d-4b7f-9f0d-d521e3ea84b0",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "97d5183f969068c33f595e1ff936f60e450877053c610ceca5ab548f16b5606f"
+  },
+  "nodeGroups": [],
+  "id": "mmIqwlfUMSg8cJ7W",
+  "tags": []
+}
