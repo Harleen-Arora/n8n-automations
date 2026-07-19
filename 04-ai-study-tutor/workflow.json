@@ -1,0 +1,385 @@
+{
+  "name": "ai-study-tutor",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "Ai-Study-tutor",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        128,
+        -256
+      ],
+      "id": "26c95204-355d-43a6-97a3-3140042c7a2e",
+      "name": "Webhook",
+      "webhookId": "0886c735-bd09-45bc-bba8-b5c7488b9868"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1YLDkdiBR5ke6QCmVfhoXNTffHmntBm2I2P5_QeD31qo",
+          "mode": "list",
+          "cachedResultName": "n8n_demo",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1YLDkdiBR5ke6QCmVfhoXNTffHmntBm2I2P5_QeD31qo/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 708940166,
+          "mode": "list",
+          "cachedResultName": "Sheet3",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1YLDkdiBR5ke6QCmVfhoXNTffHmntBm2I2P5_QeD31qo/edit#gid=708940166"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "student",
+              "lookupValue": "={{$json.body.student }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        112,
+        -64
+      ],
+      "id": "09ec9937-302d-4b16-ab3a-6e4d45047a75",
+      "name": "Get row(s) in sheet",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "RmeZD9sysMgBxwXw",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "9d458b30-98d9-4a90-a11b-7192fe5a0632",
+              "leftValue": "={{ $json.student }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        256,
+        -64
+      ],
+      "id": "6a32ed1d-085f-4649-b31d-64c252f18d41",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8e387351-37ff-4279-a521-6fedd5d819ee",
+              "name": "history",
+              "value": "no previous conversation",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        464,
+        32
+      ],
+      "id": "7ca5d6b5-32bf-4e82-87ca-9c3107ac24a0",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "You are an AI Study Tutor designed to help students understand concepts clearly and accurately.\n\nYou will receive input in JSON format. The JSON may contain:\nInstructions:\n1. Parse the JSON input and extract the student's name and question.\n2. If `previous_history` exists and is not empty, use it to maintain context and provide a continuous conversation.\n3. If `previous_history` is missing, null, or empty, treat the interaction as a new conversation and answer the question normally without mentioning the absence of history.\n4. Explain concepts in a simple, student-friendly manner.\n5. If the topic is complex, break it into small, easy-to-understand steps.\n6. Use examples or analogies whenever they improve understanding.\n7. If the question requires calculations, solve them step by step.\n8. If the question is ambiguous, politely ask a clarifying question before answering.\n9. End every response by asking a relevant follow-up question or suggesting a practice question to encourage learning.\n10. Never invent previous conversation history or student information that is not provided in the JSON.\n\nExample Input:\n```json\n{\n  \"student\": \"Harleen Arora\",\n  \"question\": \"What is the difference between a for loop and a while loop in Python?\",\n  \"previous_history\": \"\"\n}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        800,
+        -112
+      ],
+      "id": "ab2cd817-62b7-4004-8f8a-bf22ddc2b0f1",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "llama-3.3-70b-versatile",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        672,
+        96
+      ],
+      "id": "93ffc856-1c9d-4b2b-9ff2-5d6c442123f2",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "nJXPRE2VmMnEYcW7",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1YLDkdiBR5ke6QCmVfhoXNTffHmntBm2I2P5_QeD31qo",
+          "mode": "list",
+          "cachedResultName": "n8n_demo",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1YLDkdiBR5ke6QCmVfhoXNTffHmntBm2I2P5_QeD31qo/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 708940166,
+          "mode": "list",
+          "cachedResultName": "Sheet3",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1YLDkdiBR5ke6QCmVfhoXNTffHmntBm2I2P5_QeD31qo/edit#gid=708940166"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "student": "={{$node[\"Webhook\"].json.body.student }}",
+            "question": "={{ $node[\"Webhook\"].json.body.question }}",
+            "answer": "={{$json.output}}",
+            "time": "={{$now}}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "student",
+              "displayName": "student",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "question",
+              "displayName": "question",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "answer",
+              "displayName": "answer",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "time",
+              "displayName": "time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1152,
+        -112
+      ],
+      "id": "dba382a0-d7c8-48d0-9cc6-1908628f6fea",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "RmeZD9sysMgBxwXw",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "language": "pythonNative",
+        "pythonCode": "rows = _items\n\nhistory = \"\"\n\nfor row in rows:\n    question = row[\"json\"].get(\"question\", \"\")\n    answer = row[\"json\"].get(\"answer\", \"\")\n\n    if answer.strip():   # Only include answered conversations\n        history += f\"Student: {question}\\n\"\n        history += f\"Tutor: {answer}\\n\\n\"\n\nif not history:\n    history = \"No previous conversation\"\n\nreturn [{\n    \"json\": {\n        \"history\": history\n    }\n}]"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        448,
+        -240
+      ],
+      "id": "5023b6df-e760-4719-8303-7b74c61c80f1",
+      "name": "Code in Python"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $node['AI Agent'].json.output}}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1360,
+        -112
+      ],
+      "id": "c0a1ec75-b402-4bf5-82ba-1a6431204798",
+      "name": "Respond to Webhook"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Code in Python",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in Python": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "e12e3ad1-b7df-4e06-9566-e01b7da43084",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "97d5183f969068c33f595e1ff936f60e450877053c610ceca5ab548f16b5606f"
+  },
+  "nodeGroups": [],
+  "id": "CaXHhkgRHqWQi85g",
+  "tags": []
+}
