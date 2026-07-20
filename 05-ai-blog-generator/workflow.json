@@ -1,0 +1,313 @@
+{
+  "name": "blog-generator",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "1YLDkdiBR5ke6QCmVfhoXNTffHmntBm2I2P5_QeD31qo",
+          "mode": "list",
+          "cachedResultName": "n8n_demo",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1YLDkdiBR5ke6QCmVfhoXNTffHmntBm2I2P5_QeD31qo/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1264508989,
+          "mode": "list",
+          "cachedResultName": "Sheet5",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1YLDkdiBR5ke6QCmVfhoXNTffHmntBm2I2P5_QeD31qo/edit#gid=1264508989"
+        },
+        "event": "rowAdded",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        -304,
+        -176
+      ],
+      "id": "a0e1281b-4970-4953-95ef-906ae0a2a01e",
+      "name": "Google Sheets Trigger",
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "ji346h2CqTV77YHA",
+          "name": "Google Sheets Trigger account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are an expert SEO content writer and digital marketing specialist.\n\nUsing the information below, generate a complete SEO-optimized blog.\n\nTopic:\n{{$json.TOPIC}}\n\nTarget Audience:\n{{$json.TARGET_AUDIENCE}}\n\nTone:\n{{$json.TONE}}\n\nWord Count:\n{{$json.WORD_COUNT}}\n\nSEO KEYWORD :\n{{ $json.SEO_KEYWORD }}\n\nInstructions:\n1. Generate the most relevant SEO keyword for the topic.\n2. Create an engaging, SEO-friendly blog title.\n3. Write a complete blog of approximately the requested word count.\n4. Use the generated SEO keyword naturally throughout the blog.\n5. Organize the blog using headings and subheadings.\n6. Write an engaging introduction and a strong conclusion.\n7. Generate a compelling meta description (maximum 160 characters).\n8. Generate 10–15 relevant social media hashtags related to the topic and SEO keyword. Return them as a single string separated by spaces (do not use commas).\n\nReturn the response using the required structured output format.\nDo not include markdown, explanations, or code fences.",
+        "hasOutputParser": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -96,
+        -176
+      ],
+      "id": "fc38ba2c-07f9-4dbc-b4f3-16e562938e9c",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"TOPIC\": \"Benefits of Artificial Intelligence in Education\",\n  \"SEO_KEYWORD\": \"Artificial Intelligence in Education\",\n  \"TITLE\": \"How Artificial Intelligence is Revolutionizing Modern Education\",\n  \"BLOG\": \"Artificial Intelligence (AI) is rapidly transforming the education sector by enabling personalized learning experiences, automating repetitive tasks, and improving student outcomes. Educational institutions worldwide are adopting AI-powered tools to enhance teaching and learning...\",\n   \"HASHTAGS\": \"#ArtificialIntelligence #AI #Education #EdTech #MachineLearning #Technology #Innovation #Learning #FutureOfEducation #DigitalLearning\",\n  \"META_DESCRIPTION\": \"Discover how Artificial Intelligence is transforming education through personalized learning, automation, and smarter classrooms.\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        80,
+        32
+      ],
+      "id": "8633bed7-6d3f-4664-a968-6b116688dcdd",
+      "name": "Structured Output Parser1"
+    },
+    {
+      "parameters": {
+        "model": "llama-3.3-70b-versatile",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -240,
+        32
+      ],
+      "id": "47170cf9-1ca7-4b50-8f62-473adecb2737",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "nJXPRE2VmMnEYcW7",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1YLDkdiBR5ke6QCmVfhoXNTffHmntBm2I2P5_QeD31qo",
+          "mode": "list",
+          "cachedResultName": "n8n_demo",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1YLDkdiBR5ke6QCmVfhoXNTffHmntBm2I2P5_QeD31qo/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1264508989,
+          "mode": "list",
+          "cachedResultName": "Sheet5",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1YLDkdiBR5ke6QCmVfhoXNTffHmntBm2I2P5_QeD31qo/edit#gid=1264508989"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "TOPIC": "={{ $('Google Sheets Trigger').item.json.TOPIC }}",
+            "TARGET_AUDIENCE": "={{ $('Google Sheets Trigger').item.json.TARGET_AUDIENCE }}",
+            "TONE": "={{ $('Google Sheets Trigger').item.json.TONE }}",
+            "WORD_COUNT": "={{ $('Google Sheets Trigger').item.json.WORD_COUNT }}",
+            "SEO_KEYWORD": "={{ $('Google Sheets Trigger').item.json.SEO_KEYWORD }}",
+            "TITLE": "={{ $json.output.title  }}",
+            "BLOG": "={{ $json.output.blog }}",
+            "HASHTAGS": "={{ $json.output.hashtags }}",
+            "META_DESCRIPTION": "={{ $json.output.meta_description }}"
+          },
+          "matchingColumns": [
+            "TOPIC"
+          ],
+          "schema": [
+            {
+              "id": "TOPIC",
+              "displayName": "TOPIC",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "TARGET_AUDIENCE",
+              "displayName": "TARGET_AUDIENCE",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "TONE",
+              "displayName": "TONE",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "WORD_COUNT",
+              "displayName": "WORD_COUNT",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "SEO_KEYWORD",
+              "displayName": "SEO_KEYWORD",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "TITLE",
+              "displayName": "TITLE",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "BLOG",
+              "displayName": "BLOG",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "HASHTAGS",
+              "displayName": "HASHTAGS",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "META_DESCRIPTION",
+              "displayName": "META_DESCRIPTION",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        256,
+        -176
+      ],
+      "id": "a6c7501c-72f9-4ef3-8d98-e7e678f6b5b5",
+      "name": "Append or update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "RmeZD9sysMgBxwXw",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Sheets Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser1": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Append or update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "879d0d2b-074c-464a-ad92-c51112e85cf5",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "97d5183f969068c33f595e1ff936f60e450877053c610ceca5ab548f16b5606f"
+  },
+  "nodeGroups": [],
+  "id": "1KRxXWKRT80QmmTI",
+  "tags": []
+}
